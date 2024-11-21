@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat GPT</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            font-family: 'DM Sans', sans-serif;
+            background: #f0f1f2;
             margin: 0;
             display: flex;
             justify-content: center;
@@ -15,21 +16,24 @@
             height: 100vh;
         }
         #chat-container {
-            width: 400px;
-            height: 600px;
+            width: 90%;
+            max-width: 400px;
+            height: 90%;
+            max-height: 600px;
             background: #fff;
-            border-radius: 10px;
+            border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
         }
         #chat-header {
             padding: 10px;
-            background: #007bff;
+            background: #0082ba;
             color: white;
             text-align: center;
-            border-radius: 10px 10px 0 0;
+            border-radius: 15px 15px 0 0;
             font-size: 18px;
+            font-weight: 500;
         }
         #chat-body {
             flex: 1;
@@ -45,16 +49,17 @@
             border-radius: 10px;
             font-size: 14px;
             line-height: 1.4;
+            animation: fadeIn 0.3s ease-in-out;
         }
         .user {
-            background: #007bff;
+            background: #204a66;
             color: white;
             align-self: flex-end;
             border-bottom-right-radius: 0;
         }
         .gpt {
-            background: #f1f1f1;
-            color: #333;
+            background: #595959;
+            color: white;
             align-self: flex-start;
             border-bottom-left-radius: 0;
         }
@@ -62,24 +67,45 @@
             padding: 10px;
             display: flex;
             gap: 10px;
+            border-top: 1px solid #e0e0e0;
         }
         #userInput {
             flex: 1;
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 10px;
             font-size: 14px;
+        }
+        #userInput::placeholder {
+            color: #aaa;
         }
         #sendButton {
             padding: 10px;
-            background: #007bff;
+            background: #0082ba;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         #sendButton:hover {
-            background: #0056b3;
+            background: #006899;
+        }
+        #sendButton svg {
+            width: 16px;
+            height: 16px;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -88,25 +114,33 @@
         <div id="chat-header">Chat GPT</div>
         <div id="chat-body"></div>
         <div id="chat-footer">
-            <input type="text" id="userInput" placeholder="Digite sua mensagem..." />
-            <button id="sendButton">Enviar</button>
+            <input type="text" id="userInput" placeholder="Escreva aqui a sua mensagem/prompt" />
+            <button id="sendButton">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+            </button>
         </div>
     </div>
 
     <script>
-        document.getElementById('sendButton').addEventListener('click', async () => {
-            const chatBody = document.getElementById('chat-body');
-            const userInput = document.getElementById('userInput');
-            const message = userInput.value.trim();
+        const sendButton = document.getElementById('sendButton');
+        const userInput = document.getElementById('userInput');
+        const chatBody = document.getElementById('chat-body');
 
+        function addMessage(content, type) {
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.innerText = content;
+            chatBody.appendChild(message);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
             if (!message) return;
 
-            const userMessage = document.createElement('div');
-            userMessage.className = 'message user';
-            userMessage.innerText = message;
-            chatBody.appendChild(userMessage);
-            chatBody.scrollTop = chatBody.scrollHeight;
-
+            addMessage(message, 'user');
             userInput.value = '';
 
             try {
@@ -116,19 +150,23 @@
                     body: JSON.stringify({ message }),
                 });
                 const data = await response.json();
-
-                const gptMessage = document.createElement('div');
-                gptMessage.className = 'message gpt';
-                gptMessage.innerText = data.reply || 'Erro: Resposta não disponível.';
-                chatBody.appendChild(gptMessage);
-                chatBody.scrollTop = chatBody.scrollHeight;
+                addMessage(data.reply || 'Erro: Resposta não disponível.', 'gpt');
             } catch (error) {
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'message gpt';
-                errorMessage.innerText = 'Erro de comunicação.';
-                chatBody.appendChild(errorMessage);
+                addMessage('Erro de comunicação.', 'gpt');
+            }
+        }
+
+        // Enviar mensagem ao clicar no botão
+        sendButton.addEventListener('click', sendMessage);
+
+        // Enviar mensagem ao pressionar Enter
+        userInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
             }
         });
     </script>
 </body>
 </html>
+
