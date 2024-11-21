@@ -29,18 +29,22 @@
         #chat-header {
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
             padding: 10px;
             background: #0082ba;
             color: white;
             border-radius: 15px 15px 0 0;
             font-size: 18px;
             font-weight: 500;
+        }
+        #chat-header .title {
             text-align: left;
+            padding-left: 5px;
         }
         #chat-header svg {
             width: 24px;
             height: 24px;
+            margin-right: 5px;
         }
         #chat-body {
             flex: 1;
@@ -119,10 +123,10 @@
 <body>
     <div id="chat-container">
         <div id="chat-header">
+            <span class="title">iaLab Chat</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h8M8 14h4m8 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            iaLab Chat
         </div>
         <div id="chat-body"></div>
         <div id="chat-footer">
