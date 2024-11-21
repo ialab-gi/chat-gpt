@@ -27,6 +27,9 @@
             flex-direction: column;
         }
         #chat-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             padding: 10px;
             background: #0082ba;
             color: white;
@@ -34,7 +37,10 @@
             font-size: 18px;
             font-weight: 500;
             text-align: left;
-            padding-left: 15px; /* Alinhamento do texto à esquerda */
+        }
+        #chat-header svg {
+            width: 24px;
+            height: 24px;
         }
         #chat-body {
             flex: 1;
@@ -112,7 +118,12 @@
 </head>
 <body>
     <div id="chat-container">
-        <div id="chat-header">iaLab Chat</div>
+        <div id="chat-header">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v8a2 2 0 01-2 2h-6l-4 4v-4H7a2 2 0 01-2-2v-8a2 2 0 012-2h2m6 0h-2m0 0V6a2 2 0 10-4 0v2m4 0H9" />
+            </svg>
+            iaLab Chat
+        </div>
         <div id="chat-body"></div>
         <div id="chat-footer">
             <input type="text" id="userInput" placeholder="Escreva aqui a sua mensagem/prompt" />
